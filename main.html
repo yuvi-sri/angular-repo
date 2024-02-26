@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <title>ShopMatic</title>
+  </head>
+  <body ng-app="myApp">
+    <div ng-controller="ctrl">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="#">ShopMatic</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                  <li class="nav-item">
+                    <a class="nav-link active"  aria-current="page" href="#" >Home</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link active" href="#" ng-click="fashion1()">FASHION</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link active" href="#" ng-click="home1()">BAGS</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link active" href="#" ng-click="home1()">SHOES</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link active" href="#" ng-click="cart1()">CART</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+          <br>
+          <br>
+          <div ng-show="fashion" id="product">
+            <div class="row row-cols-1 row-cols-md-4 g-4">
+                <div class="col" ng-repeat="product in products">
+                  <div class="card">
+                    <img src="{{product.p_im}}" class="card-img-top" alt=""  height="350">
+                    <div class="card-body">
+                      <h5 class="card-title">Product Name:   {{product.p_name}}</h5>
+                      <h5 class="card-text">Product Price:   {{product.p_price}}</h5>
+                      <div class="d-grid gap-2">
+                        <button class="btn btn-danger" type="button" ng-click="addItem(product)">Add to Cart</button>
+                        <button class="btn btn-danger" type="button">Buy Now</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div ng-show="home">
+            <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                  <div class="carousel-item active">
+                    <img src="ecom2.webp" class="d-block w-100" alt="" width="10" height="650">
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div ng-show="cart">
+            <div class="row row-cols-1 row-cols-md-5 g-4">
+                <div class="col" ng-repeat="cart in carts">
+                  <div class="card">
+                    <img src="{{cart.p_im}}" class="card-img-top" alt=""  height="350">
+                    <div class="card-body">
+                      <h5 class="card-title">Product Name:   {{cart.p_name}}</h5>
+                      <h5 class="card-text">Product Price:   {{cart.p_price}}</h5>
+                      <div class="d-grid gap-2">
+                        <button class="btn btn-danger" type="button" ng-click="remove($index)">Remove from Cart</button>
+                        <button class="btn btn-danger" type="button">Buy Now</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div><br><br>
+              <h5 class="fw-bold">Total Amount:{{total}}</h5>
+          </div>
+    </div>
+    <script>
+        var app1=angular.module('myApp', [])
+         .controller('ctrl', function($scope) {
+           $scope.home = true;
+           $scope.fashion = false;
+           $scope.cart = false;
+           $scope.orders = false;
+   
+           $scope.home1= function() {
+                   $scope.home= true;
+                   $scope.fashion = false;
+                   $scope.cart = false;
+                   $scope.orders = false;
+               };
+           $scope.fashion1= function() {
+                   $scope.home= false;
+                   $scope.fashion = true;
+                   $scope.cart = false;
+                   $scope.orders = false;
+               };
+           $scope.cart1= function() {
+                   $scope.home= false;
+                   $scope.fashion = false;
+                   $scope.cart = true;
+                   $scope.orders = false;
+               };
+           $scope.orders1= function() {
+                   $scope.home= false;
+                   $scope.fashion = false;
+                   $scope.cart = false;
+                   $scope.orders = true;
+               };
+            $scope.carts=[];
+           $scope.products=[
+               {p_im:"d1.jpg",p_name:"Red Dress",p_price:"100"},
+               {p_im:"d2.jpg",p_name:"Black T-Shirt",p_price:"200"},
+               {p_im:"d3.jpg",p_name:"White Shirt",p_price:"300"},
+               {p_im:"cloth.jpeg",p_name:"Casual",p_price:"300"},
+           ];
+           $scope.total=0;
+           $scope.addItem = function (product) {
+            if(product){
+                $scope.carts.push({p_im:product.p_im,p_name:product.p_name,p_price:product.p_price});
+                $scope.total+=parseFloat(product.p_price);
+            }
+            };
+            $scope.remove=function(index){
+              var removed=$scope.carts[index];
+              $scope.total-=parseFloat(removed.p_price);
+              $scope.carts.splice(index,1);
+            }
+});
+   </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  </body>
+</html>
